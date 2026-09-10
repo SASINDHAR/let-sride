@@ -1,0 +1,1 @@
+{"indexes":[],"fieldOverrides":[{"collectionGroup":"rides","fieldPath":"messages","indexes":[]},{"collectionGroup":"rides","fieldPath":"members","indexes":[]},{"collectionGroup":"rides","fieldPath":"events","indexes":[]},{"collectionGroup":"rateLimits","fieldPath":"expiresAt","ttl":true,"indexes":[]}]}

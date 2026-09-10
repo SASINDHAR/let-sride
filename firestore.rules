@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signedIn(){return request.auth != null;}
+  match /users/{uid} {
+   allow read: if signedIn() && request.auth.uid == uid;
+   allow create, update: if signedIn() && request.auth.uid == uid
+    && request.resource.data.keys().hasOnly(['id','name','email','vehicle','phone','contactName','contactPhone','relationship','sharePhone','registration','photo'])
+    && request.resource.data.id == uid
+    && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 120
+    && request.resource.data.email is string && request.resource.data.email.size() <= 254
+    && request.resource.data.vehicle is string && request.resource.data.vehicle.size() <= 120
+    && request.resource.data.phone is string && request.resource.data.phone.size() <= 120
+    && request.resource.data.contactName is string && request.resource.data.contactName.size() <= 120
+    && request.resource.data.contactPhone is string && request.resource.data.contactPhone.size() <= 120
+    && request.resource.data.relationship is string && request.resource.data.relationship.size() <= 120
+    && request.resource.data.registration is string && request.resource.data.registration.size() <= 120
+    && request.resource.data.photo is string && request.resource.data.photo.size() <= 2000
+    && request.resource.data.sharePhone is bool;
+   allow delete: if signedIn() && request.auth.uid == uid;
+  }
+  match /rides/{rideId} {
+   allow read: if signedIn() && request.auth.uid in resource.data.memberIds;
+   // Callable functions validate every mutation and run it in a transaction.
+   allow write: if false;
+  }
+  match /{document=**} {allow read, write: if false;}
+ }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "letsride-backend",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "test": "node --test domain.test.mjs",
+    "check": "node --check index.mjs"
+  },
+  "dependencies": {
+    "@google/genai": "^1.0.0",
+    "firebase-admin": "^14.4.0",
+    "firebase-functions": "^7.3.2"
+  },
+  "overrides": {
+    "gaxios": {
+      "uuid": "11.1.1"
+    }
+  }
+}
