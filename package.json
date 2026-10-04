@@ -11,7 +11,7 @@
     "start": "vite preview --config vite.static.config.ts --configLoader runner --host 127.0.0.1",
     "lint": "oxlint",
     "format": "oxfmt",
-    "test": "node --experimental-strip-types --test --test-isolation=none functions/domain.test.mjs functions/upgrade.test.mjs"
+    "test": "node --experimental-strip-types --test --test-isolation=none functions/domain.test.mjs functions/upgrade.test.mjs functions/navigation.test.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",
@@ -23,6 +23,7 @@
     "embla-carousel-react": "8.5.2",
     "firebase": "^12.19.0",
     "input-otp": "1.4.2",
+    "leaflet": "^1.9.4",
     "lucide-react": "1.31.0",
     "react": "19.2.6",
     "react-day-picker": "9.8.1",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.2.1",
+    "@types/leaflet": "^1.9.22",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

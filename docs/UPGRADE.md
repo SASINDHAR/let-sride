@@ -1,5 +1,13 @@
 # LetsRide command center
 
+## Real navigation
+
+The main map now defaults to real OpenStreetMap tiles rendered by Leaflet. `Preview road route` resolves submitted places and fetches actual road geometry and maneuver instructions from OSRM. Review the resolved place names before starting. `Start GPS navigation` asks for explicit permission, then uses `watchPosition` for device location, heading/speed availability, accuracy, map following, next turn and estimated remaining distance/time. The initial route is recalculated from the first accurate actual GPS fix. Reliable off-route readings sustained for 15 seconds can recalculate the remaining stops, at most once every 30 seconds. Stale or inaccurate GPS suspends rerouting. Voice directions are optional. Stopping or leaving the map clears the watch and aborts pending requests. Group simulation stays available in a separate map mode; synthetic riders and hazards never appear on the real map.
+
+Navigation is independent of Firebase and can guide the current device in a browser-local workspace. It does not enable group location sharing. Road calculations send the submitted route coordinates, including current GPS after consent, to the routing provider. Map tiles disclose the viewed area to the tile provider. GPS positions are not persisted by the navigation component. Browser background/locked-screen behavior depends on the operating system; Google Maps handoff supports native navigation from the device location.
+
+Provider defaults are OSM standard tiles, Nominatim geocoding and the OSRM public routing server. This owner-private preview has low usage: geocoding is explicit, cached and serialized below one request per second, with no autocomplete; no tiles are downloaded for offline use or prefetched. For a shared/high-volume deployment, configure dedicated `VITE_MAP_TILE_URL`, `VITE_GEOCODING_URL` and `VITE_ROUTING_URL` services and enforce aggregate limits through a backend. ETA is a driving estimate without live traffic. The app does not claim professional navigation reliability or road-condition guarantees.
+
 The v2 shell preserves the original ride lobby, account flows, join codes, consent-based GPS, Firebase subscriptions and host controls. The command center adds group awareness, role assignment, hazards and votes, private conversations, deliberate SOS cancellation/confirmation, simulated impact checks, route weather, replay, history, analytics and privacy controls.
 
 ## Demo and connected modes
