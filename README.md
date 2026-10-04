@@ -1,3 +1,7 @@
+# LetsRide v2 � Group Safety & Ride Coordination
+
+The upgraded command center, simulation, safety workflows and architecture are documented in [docs/UPGRADE.md](docs/UPGRADE.md). The PostgreSQL migration blueprint is [docs/schema.sql](docs/schema.sql).
+
 # Let’s Ride
 
 A responsive React + TypeScript group-riding application with a usable local demo and a Firebase/Google Cloud backend implementation.
@@ -68,7 +72,7 @@ This implementation embeds the bounded member list, last 150 messages, and up to
 
 ## Location and safety behavior
 
-- GPS requires explicit consent. Updates are throttled to 15 seconds and are sent only while the active ride screen is mounted. Pause/end/unmount stops the watch. Ending removes current rider and emergency coordinates. No continuous route history is recorded.
+- GPS requires explicit consent. Updates are throttled to 15 seconds and are sent only while the active ride screen is mounted. Pause/end/unmount stops the watch. Ending removes current rider and emergency coordinates. No real continuous route history is recorded; synthetic rides include replay frames.
 - Location older than two minutes is excluded from the live map. A scheduled backend sweep removes stale locations every five minutes and expires emergency coordinates after 24 hours.
 - Separation warnings use configurable distance and time relative to the center of fresh group positions, computed while the screen is open. These are deterministic warnings, not an AI danger classifier. They do not call emergency services.
 - SOS supports six types, optional current coordinates, duplicate-open-event prevention, and host acknowledgement / help-on-the-way / resolution. Manual status cannot clear an unresolved emergency.
@@ -83,11 +87,11 @@ npm test
 node --check functions/index.mjs
 ```
 
-Tests cover unauthorized mutations, host-only controls, readiness confirmation, start/pause/end transitions, coordinate validation, SOS response order, membership removal, and distance calculations. Cloud deployment, Firebase rules emulator tests, real-device GPS, push notifications and provider integration tests require a configured project and have not been run. WebMCP read/open tools are feature-detected; no supported WebMCP execution context was available for contract verification.
+Tests cover unauthorized mutations, host-only controls, readiness confirmation, start/pause/end transitions, coordinate validation, SOS response order, membership removal, and distance calculations. Cloud deployment, Firebase rules emulator tests, real-device GPS, push notifications and provider integration tests require a configured project and have not been run. WebMCP read/open tools are feature-detected; the upgraded page registers read/open tools in compatible browsers.
 
 ## Remaining scope before production use
 
-This is a working MVP implementation, not a certification of production readiness. Native background tracking, route optimization, place autocomplete/map selection, approval queues, photo upload UI, phone authentication, per-stop weather/official severe-weather alerts, advanced analytics, durable server-side separation notifications, and full real-device end-to-end tests remain. Weather geocoding uses the first matching city and should be upgraded to the host’s exact selected destination coordinates. Obtain operational monitoring, cost controls, backups and project-specific privacy/retention settings before launch.
+This is a working MVP implementation, not a certification of production readiness. Native background tracking, route optimization, place autocomplete/map selection, approval queues, phone authentication, official severe-weather alerts, and full real-device end-to-end tests remain. Weather geocoding uses the first matching city and should be upgraded to the host’s exact selected destination coordinates. Obtain operational monitoring, cost controls, backups and project-specific privacy/retention settings before launch.
 
 Hero photograph: Yulian Alexeyev / Unsplash, [Schwarzwaldhochstraße](https://unsplash.com/de/fotos/wald-aus-der-vogelperspektive-eXLE2b2Zqis).
 

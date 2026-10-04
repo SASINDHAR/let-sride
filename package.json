@@ -11,7 +11,7 @@
     "start": "vite preview --config vite.static.config.ts --configLoader runner --host 127.0.0.1",
     "lint": "oxlint",
     "format": "oxfmt",
-    "test": "node --test --test-isolation=none functions/domain.test.mjs"
+    "test": "node --experimental-strip-types --test --test-isolation=none functions/domain.test.mjs functions/upgrade.test.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",

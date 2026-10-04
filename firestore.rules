@@ -5,7 +5,7 @@ service cloud.firestore {
   match /users/{uid} {
    allow read: if signedIn() && request.auth.uid == uid;
    allow create, update: if signedIn() && request.auth.uid == uid
-    && request.resource.data.keys().hasOnly(['id','name','email','vehicle','phone','contactName','contactPhone','relationship','sharePhone','registration','photo'])
+    && request.resource.data.keys().hasOnly(['id','name','email','vehicle','phone','contactName','contactPhone','relationship','sharePhone','registration','photo','medicalInfo','emergencyLanguage','privacy'])
     && request.resource.data.id == uid
     && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 120
     && request.resource.data.email is string && request.resource.data.email.size() <= 254
@@ -16,12 +16,29 @@ service cloud.firestore {
     && request.resource.data.relationship is string && request.resource.data.relationship.size() <= 120
     && request.resource.data.registration is string && request.resource.data.registration.size() <= 120
     && request.resource.data.photo is string && request.resource.data.photo.size() <= 2000
-    && request.resource.data.sharePhone is bool;
+    && request.resource.data.sharePhone is bool
+    && (!('medicalInfo' in request.resource.data) || request.resource.data.medicalInfo is string && request.resource.data.medicalInfo.size() <= 800)
+    && (!('emergencyLanguage' in request.resource.data) || request.resource.data.emergencyLanguage is string && request.resource.data.emergencyLanguage.size() <= 120)
+    && (!('privacy' in request.resource.data) || request.resource.data.privacy.keys().hasOnly(['profileVisibility','historyVisibility','contactVisibility','retentionDays','publicProfile','reducedMotion'])
+      && request.resource.data.privacy.profileVisibility in ['Only me','Ride members']
+      && request.resource.data.privacy.historyVisibility in ['Only me','Ride members']
+      && request.resource.data.privacy.contactVisibility in ['Only me','Leader during SOS']
+      && request.resource.data.privacy.retentionDays in [7,30,90]
+      && request.resource.data.privacy.publicProfile is bool
+      && request.resource.data.privacy.reducedMotion is bool);
    allow delete: if signedIn() && request.auth.uid == uid;
   }
   match /rides/{rideId} {
    allow read: if signedIn() && request.auth.uid in resource.data.memberIds;
    // Callable functions validate every mutation and run it in a transaction.
+   allow write: if false;
+  }
+  match /publicRides/{rideId} {allow read: if true; allow write: if false;}
+  match /publicProfiles/{uid} {allow read: if true; allow write: if false;}
+  match /directMessages/{messageId} {
+   allow read: if signedIn() && request.auth.uid in resource.data.participants
+    && request.time < resource.data.expiresAt
+    && request.auth.uid in get(/databases/$(database)/documents/rides/$(resource.data.rideId)).data.memberIds;
    allow write: if false;
   }
   match /{document=**} {allow read, write: if false;}

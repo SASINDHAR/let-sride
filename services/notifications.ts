@@ -1,0 +1,5 @@
+import type {Ride,RideEvent} from '@/lib/types';
+export const realtimeEvents=['RIDER_LOCATION_UPDATED','RIDER_JOINED','RIDER_LEFT','RIDER_OFFLINE','RIDER_SEPARATED','HAZARD_REPORTED','HAZARD_CONFIRMED','SOS_TRIGGERED','SOS_RESOLVED','ROUTE_UPDATED','RIDE_STARTED','RIDE_ENDED'] as const;
+export type RealtimeEnvelope={id:string;rideId:string;type:typeof realtimeEvents[number];at:number;payload:unknown;simulated:boolean};
+export interface RealtimeTransport{subscribe(rideId:string,receive:(event:RealtimeEnvelope)=>void):()=>void;publish(event:RealtimeEnvelope):Promise<void>}
+export function notifications(r:Ride):RideEvent[]{return [...(r.timeline||[]),...r.events.filter(e=>!['Resolved','Cancelled'].includes(e.status)).map(e=>({id:e.id,type:'SOS_TRIGGERED',severity:'CRITICAL' as const,text:`${e.name} needs assistance · ${e.type}`,at:e.at,simulated:r.simulated})),...r.messages.filter(m=>m.type==='announcement').map(m=>({id:m.id,type:'ANNOUNCEMENT',severity:'INFO' as const,text:m.text,at:m.at,simulated:r.simulated}))].sort((a,b)=>b.at-a.at).slice(0,50);}

@@ -1,1 +1,56 @@
-{"indexes":[],"fieldOverrides":[{"collectionGroup":"rides","fieldPath":"messages","indexes":[]},{"collectionGroup":"rides","fieldPath":"members","indexes":[]},{"collectionGroup":"rides","fieldPath":"events","indexes":[]},{"collectionGroup":"rateLimits","fieldPath":"expiresAt","ttl":true,"indexes":[]}]}
+{
+  "indexes": [
+    {
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "participants",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "rideId",
+          "order": "ASCENDING"
+        },
+        {
+          "order": "ASCENDING",
+          "fieldPath": "expiresAt"
+        }
+      ],
+      "collectionGroup": "directMessages"
+    }
+  ],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "rides",
+      "fieldPath": "messages",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "rides",
+      "fieldPath": "members",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "rides",
+      "fieldPath": "events",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "rateLimits",
+      "fieldPath": "expiresAt",
+      "ttl": true,
+      "indexes": []
+    },
+    {
+      "fieldPath": "expiresAt",
+      "indexes": [
+        {
+          "queryScope": "COLLECTION",
+          "order": "ASCENDING"
+        }
+      ],
+      "ttl": true,
+      "collectionGroup": "directMessages"
+    }
+  ]
+}
