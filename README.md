@@ -1,10 +1,12 @@
-# LetsRide v2 � Group Safety & Ride Coordination
+# LetsRide v2 — Group Safety & Ride Coordination
 
 The upgraded command center, simulation, safety workflows and architecture are documented in [docs/UPGRADE.md](docs/UPGRADE.md). The PostgreSQL migration blueprint is [docs/schema.sql](docs/schema.sql).
 
-# Let’s Ride
+# Letâ€™s Ride
 
 A responsive React + TypeScript group-riding application with a usable local demo and a Firebase/Google Cloud backend implementation.
+
+GitHub source: [SASINDHAR/let-sride](https://github.com/SASINDHAR/let-sride). GitHub Pages: [Open LetsRide](https://sasindhar.github.io/let-sride/). Deployment instructions are in [docs/GITHUB_DEPLOYMENT.md](docs/GITHUB_DEPLOYMENT.md).
 
 ## Run locally
 
@@ -15,7 +17,7 @@ npm install --ignore-scripts
 npm run dev
 ```
 
-The static Vite configuration avoids the scaffold’s Cloudflare `workerd` dependency, which does not support Windows ARM. On Windows, the scripts use Vite’s runner configuration loader. Unused server-scaffold dependencies were removed to avoid shipping unrelated vulnerable packages.
+The static Vite configuration avoids the scaffoldâ€™s Cloudflare `workerd` dependency, which does not support Windows ARM. On Windows, the scripts use Viteâ€™s runner configuration loader. Unused server-scaffold dependencies were removed to avoid shipping unrelated vulnerable packages.
 
 Without Firebase configuration the app opens in **Demo workspace**. This is explicitly browser-local data, not a remote multiuser service. Create a ride, copy its code, toggle readiness, start/pause/end it, chat, report a demo SOS, and acknowledge/resolve the event. In My profile, switch between the demo host and rider; the rider can join with `RIDE7X`. Separate tabs share demo rides through storage events. Profiles are tab-local. Do not rely on the demo for actual emergencies.
 
@@ -24,7 +26,7 @@ Without Firebase configuration the app opens in **Demo workspace**. This is expl
 1. Create a Firebase project with Firestore in your chosen region, Email/Password and Google Authentication, Cloud Storage, and the Blaze billing plan for backend services.
 2. Copy `.env.example` to `.env.local` and fill the public Firebase web-app identifiers. The app does not switch to Firebase mode until API key, project ID, and app ID are present. Add the deployed hostname and localhost to Firebase Authentication authorized domains.
 3. Register a web app in Firebase App Check using reCAPTCHA v3 and fill `VITE_FIREBASE_APPCHECK_SITE_KEY`. Callable functions enforce App Check. Configure authorized domains and token exchange before using the backend. Never put a service-account private key in a Vite variable.
-4. Enable Maps JavaScript API, Places API and Directions API for the map implementation. Set a browser/referrer-restricted `VITE_GOOGLE_MAPS_API_KEY` and API restrictions. Enable billing. The Maps key is public by design. Without a key the app shows a clearly labelled route diagram and external navigation links, never simulated GPS.
+4. Road navigation uses OpenStreetMap tiles, Nominatim place search, and OSRM directions by default. Riders explicitly grant GPS permission to start navigation. Set the optional navigation provider URLs in .env.example for dedicated services. The group simulation is a separate view; it never supplies real GPS positions. See [docs/UPGRADE.md](docs/UPGRADE.md) for provider and navigation limits.
 5. Enable Vertex AI. Give the Functions runtime service account Vertex AI User access. Configure `VERTEX_LOCATION` and `GEMINI_MODEL` using `functions/.env.example`. Verify the selected model is available in your project. AI calls run on the backend.
 6. Enable Firebase Cloud Messaging web push and put its public VAPID key in `VITE_FIREBASE_VAPID_KEY`. Riders opt in from My profile. Push payloads omit names, coordinates, and message bodies from lock screens. Delivery is best effort and must not be treated as guaranteed emergency response.
 7. Install Firebase CLI, authenticate, select the project, install backend dependencies, and deploy:
@@ -43,7 +45,7 @@ Functions v2 runs on Google Cloud Run infrastructure in `europe-west3`. Match `V
 
 ## Architecture and API
 
-Browser → Firebase Authentication + App Check → callable Cloud Functions → Firestore transactions. The browser subscribes to `rides` using `memberIds array-contains auth.uid`. Every write to rides goes through the server. Direct client writes to rides and join-code enumeration are denied.
+Browser â†’ Firebase Authentication + App Check â†’ callable Cloud Functions â†’ Firestore transactions. The browser subscribes to `rides` using `memberIds array-contains auth.uid`. Every write to rides goes through the server. Direct client writes to rides and join-code enumeration are denied.
 
 | Callable | Request | Result / authorization |
 | --- | --- | --- |
@@ -52,7 +54,7 @@ Browser → Firebase Authentication + App Check → callable Cloud Functions →
 | `joinRide` | code | Atomic capacity check and membership creation |
 | `rideAction` | rideId, action, action fields | Validated mutation; host-only controls enforced server-side |
 | `emergencyContact` | rideId, eventId | Host only, open emergency only, rider consent required |
-| `registerPushToken` | token | Registers this signed-in user’s push token |
+| `registerPushToken` | token | Registers this signed-in userâ€™s push token |
 | `rideAssistant` | rideId, question | Member-only Vertex AI advice with bounded inputs and rate limit |
 | `rideWeather` | rideId | Current destination conditions from Open-Meteo, never AI-generated |
 
@@ -77,7 +79,7 @@ This implementation embeds the bounded member list, last 150 messages, and up to
 - Separation warnings use configurable distance and time relative to the center of fresh group positions, computed while the screen is open. These are deterministic warnings, not an AI danger classifier. They do not call emergency services.
 - SOS supports six types, optional current coordinates, duplicate-open-event prevention, and host acknowledgement / help-on-the-way / resolution. Manual status cannot clear an unresolved emergency.
 - Browsers can suspend GPS and push when backgrounded or locked. This is a responsive web app, not native Android/iOS background tracking. A native companion and on-device testing are required for dependable locked-screen tracking.
-- External navigation launches Google Maps. In an urgent emergency, use the phone’s emergency-call capability. Automatic calling and a worldwide emergency-number resolver are not implemented.
+- External navigation launches Google Maps. In an urgent emergency, use the phoneâ€™s emergency-call capability. Automatic calling and a worldwide emergency-number resolver are not implemented.
 
 ## Validation
 
@@ -91,9 +93,9 @@ Tests cover unauthorized mutations, host-only controls, readiness confirmation, 
 
 ## Remaining scope before production use
 
-This is a working MVP implementation, not a certification of production readiness. Native background tracking, route optimization, place autocomplete/map selection, approval queues, phone authentication, official severe-weather alerts, and full real-device end-to-end tests remain. Weather geocoding uses the first matching city and should be upgraded to the host’s exact selected destination coordinates. Obtain operational monitoring, cost controls, backups and project-specific privacy/retention settings before launch.
+This is a working MVP implementation, not a certification of production readiness. Native background tracking, route optimization, place autocomplete/map selection, approval queues, phone authentication, official severe-weather alerts, and full real-device end-to-end tests remain. Weather geocoding uses the first matching city and should be upgraded to the hostâ€™s exact selected destination coordinates. Obtain operational monitoring, cost controls, backups and project-specific privacy/retention settings before launch.
 
-Hero photograph: Yulian Alexeyev / Unsplash, [Schwarzwaldhochstraße](https://unsplash.com/de/fotos/wald-aus-der-vogelperspektive-eXLE2b2Zqis).
+Hero photograph: Yulian Alexeyev / Unsplash, [SchwarzwaldhochstraÃŸe](https://unsplash.com/de/fotos/wald-aus-der-vogelperspektive-eXLE2b2Zqis).
 
 Integration references: [Firestore realtime listeners](https://firebase.google.com/docs/firestore/query-data/listen), [Firestore transactions](https://firebase.google.com/docs/firestore/manage-data/transactions), [Vertex AI quickstart](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/start/quickstart).
 
