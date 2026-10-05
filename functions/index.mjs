@@ -7,6 +7,7 @@ import {onSchedule} from 'firebase-functions/v2/scheduler';
 import {GoogleGenAI} from '@google/genai';
 import {randomInt} from 'node:crypto';
 import {changeRide,text,number} from './domain.mjs';
+export {liveCreateRide,liveLookupRide,liveJoinRide,liveRideAction,liveEmergencyContact,liveDirectMessage,liveRegisterPushToken,livePresenceEvent,liveScheduleSos,liveEscalateSos,liveLocationRecorded,liveReplayRetention,liveMemberHistory,liveRouteWeather,liveRideWeather,liveMessageRetention} from './realtime-backend.mjs';
 initializeApp();const db=getFirestore();const region='europe-west3';
 const options={region,enforceAppCheck:true,maxInstances:20,timeoutSeconds:60};
 function endpoint(fn){return onCall(options,async req=>{if(!req.auth)throw new HttpsError('unauthenticated','Sign in to continue.');try{return await fn(req.auth.uid,req.data||{});}catch(e){if(e instanceof HttpsError)throw e;throw new HttpsError('failed-precondition',e.message||'Request failed.');}});}

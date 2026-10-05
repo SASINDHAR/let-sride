@@ -1,0 +1,47 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "profiles": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['id','name','email','sharePhone']) && newData.child('id').val() === $uid && newData.child('name').isString() && newData.child('name').val().length <= 120 && newData.child('email').isString() && newData.child('sharePhone').isBoolean()"
+      }
+    },
+    "userRides": {"$uid": {".read": "auth != null && auth.uid === $uid"}},
+    "rides": {
+      ".indexOn": ["recordingExpiresAt"],
+      "$rideId": {
+        ".read": "auth != null && data.child('members').child(auth.uid).exists()",
+        "locations": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && root.child('rides').child($rideId).child('members').child(auth.uid).exists() && (!newData.exists() || root.child('rides').child($rideId).child('status').val() === 'active')",
+            ".validate": "newData.hasChildren(['userId','rideId','latitude','longitude','accuracy','timestamp','status']) && newData.child('userId').val() === $uid && newData.child('rideId').val() === $rideId && newData.child('timestamp').isNumber() && newData.child('timestamp').val() <= now + 2000 && newData.child('timestamp').val() >= now - 15000 && (!data.exists() || (newData.child('timestamp').val() >= data.child('timestamp').val() + 2000 && (newData.child('latitude').val() - data.child('latitude').val()) <= (newData.child('timestamp').val() - data.child('timestamp').val()) * 0.000001 + 0.002 && (data.child('latitude').val() - newData.child('latitude').val()) <= (newData.child('timestamp').val() - data.child('timestamp').val()) * 0.000001 + 0.002 && (newData.child('longitude').val() - data.child('longitude').val()) <= (newData.child('timestamp').val() - data.child('timestamp').val()) * 0.00001 + 0.002 && (data.child('longitude').val() - newData.child('longitude').val()) <= (newData.child('timestamp').val() - data.child('timestamp').val()) * 0.00001 + 0.002))",
+            "latitude": {".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"},
+            "longitude": {".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"},
+            "accuracy": {".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"},
+            "speed": {".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"},
+            "heading": {".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() < 360"},
+            "altitude": {".validate": "newData.isNumber() && newData.val() >= -12000 && newData.val() <= 12000"},
+            "status": {".validate": "newData.val() === 'Riding' || newData.val() === 'Stopped'"},
+            "userId": {}, "rideId": {}, "timestamp": {},
+            "$other": {".validate": false}
+          }
+        },
+        "presence": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && root.child('rides').child($rideId).child('members').child(auth.uid).exists() && (root.child('rides').child($rideId).child('status').val() === 'active' || newData.child('connected').val() === false)",
+            ".validate": "newData.hasChildren(['connected','lastSeen'])",
+            "connected": {".validate": "newData.isBoolean()"},
+            "lastSeen": {".validate": "newData.isNumber() && newData.val() <= now + 2000 && newData.val() >= now - 15000"},
+            "battery": {".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"},
+            "$other": {".validate": false}
+          }
+        }
+      }
+    },
+    "rideReplays": {"$rideId": {".read": "auth != null && root.child('rides').child($rideId).child('members').child(auth.uid).exists() && (!root.child('rides').child($rideId).child('recordingExpiresAt').exists() || root.child('rides').child($rideId).child('recordingExpiresAt').val() > now)"}},
+    "liveInboxes": {"$uid": {"$rideId": {".read": "auth != null && auth.uid === $uid && root.child('rides').child($rideId).child('members').child(auth.uid).exists()"}}}
+  }
+}

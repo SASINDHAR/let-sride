@@ -8,5 +8,5 @@ export async function enableNotifications(){
  const registration=await navigator.serviceWorker.register(`${import.meta.env.BASE_URL}firebase-messaging-sw.js?config=${encodeURIComponent(JSON.stringify(firebaseApp.options))}`);
  await navigator.serviceWorker.ready;
  const token=await getToken(getMessaging(firebaseApp),{vapidKey:import.meta.env.VITE_FIREBASE_VAPID_KEY,serviceWorkerRegistration:registration});
- if(!token)throw new Error('Could not register this device.');await call('registerPushToken',{token});return token;
+ if(!token)throw new Error('Could not register this device.');await call('liveRegisterPushToken',{token});return token;
 }

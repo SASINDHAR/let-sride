@@ -1,17 +1,13 @@
 name: Deploy LetsRide to GitHub Pages
-
 on:
   push:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
-
 concurrency:
   group: pages
   cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,10 +23,25 @@ jobs:
         id: pages
       - name: Build with the GitHub Pages base path
         run: npm run build -- --base="${{ steps.pages.outputs.base_path }}/"
+        env:
+          VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ vars.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_DATABASE_URL: ${{ vars.VITE_FIREBASE_DATABASE_URL }}
+          VITE_FIREBASE_REGION: ${{ vars.VITE_FIREBASE_REGION }}
+          VITE_FIREBASE_LIVE_REGION: ${{ vars.VITE_FIREBASE_LIVE_REGION }}
+          VITE_FIREBASE_APPCHECK_SITE_KEY: ${{ vars.VITE_FIREBASE_APPCHECK_SITE_KEY }}
+          VITE_FIREBASE_VAPID_KEY: ${{ vars.VITE_FIREBASE_VAPID_KEY }}
+          VITE_GOOGLE_MAPS_API_KEY: ${{ vars.VITE_GOOGLE_MAPS_API_KEY }}
+          VITE_GOOGLE_MAPS_MAP_ID: ${{ vars.VITE_GOOGLE_MAPS_MAP_ID }}
+      - name: Support shareable ride links
+        run: cp dist/index.html dist/404.html
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: dist
-
   deploy:
     needs: build
     runs-on: ubuntu-latest

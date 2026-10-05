@@ -1,3 +1,7 @@
+# LetsRide — real-time group navigation
+
+Live ride architecture, Database security rules, Google Maps configuration and the two-device acceptance flow are documented in [docs/REALTIME.md](docs/REALTIME.md). Real mode now requires Firebase Realtime Database and a restricted Google Maps key; demo mode must be selected explicitly. The older Firestore setup below is retained as legacy documentation and does not activate the new live ride backend.
+
 # LetsRide v2 — Group Safety & Ride Coordination
 
 The upgraded command center, simulation, safety workflows and architecture are documented in [docs/UPGRADE.md](docs/UPGRADE.md). The PostgreSQL migration blueprint is [docs/schema.sql](docs/schema.sql).
@@ -98,4 +102,3 @@ This is a working MVP implementation, not a certification of production readines
 Hero photograph: Yulian Alexeyev / Unsplash, [Schwarzwaldhochstraße](https://unsplash.com/de/fotos/wald-aus-der-vogelperspektive-eXLE2b2Zqis).
 
 Integration references: [Firestore realtime listeners](https://firebase.google.com/docs/firestore/query-data/listen), [Firestore transactions](https://firebase.google.com/docs/firestore/manage-data/transactions), [Vertex AI quickstart](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/start/quickstart).
-

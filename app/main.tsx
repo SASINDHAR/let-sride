@@ -4,4 +4,5 @@ import Home from './platform';
 import './globals.css';
 import './platform.css';
 import './navigation.css';
+import './realtime.css';
 createRoot(document.getElementById('root')!).render(<React.StrictMode><Home/></React.StrictMode>);
