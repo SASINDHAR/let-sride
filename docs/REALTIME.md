@@ -4,7 +4,7 @@ LetsRide preserves the existing rides, safety briefing, hazard confirmation, del
 
 ## Supplied Android configuration
 
-The provided google-services JSON belongs to `lets-ride-app-481919` and the Android app `com.sasi.letsride`. Its reusable public project identifiers were imported into ignored `.env.local`. Its Android app ID cannot replace a Firebase web app ID. The file contains no Realtime Database URL, Maps map ID or App Check site key. Obtain the web SDK configuration from Firebase Project settings. The Android API key must also be checked for browser-compatible restrictions before web use.
+The provided google-services JSON belongs to `lets-ride-app-481919` and the Android app `com.sasi.letsride`. Its reusable public project identifiers were imported into ignored `.env.local`. Its Android app ID cannot replace a Firebase web app ID. The verified web configuration was subsequently retrieved from the project's public Firebase Hosting initialization endpoint, imported locally, and saved as repository Actions variables. Its web app ID is `1:89934218088:web:75733a95f2a3f987684cdd`. That configuration has no Database URL. Realtime Database, Maps and App Check activation remain pending; the web API key must also have browser-compatible restrictions.
 
 ## Deployment prerequisites
 
